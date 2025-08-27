@@ -1,0 +1,25 @@
+# render.yaml for esembledata fullstack TikTok dashboard
+services:
+  - type: web
+    name: esembledata-backend
+    env: node
+    branch: main
+    path: backend
+    buildCommand: "npm install"
+    startCommand: "node server.js"
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: TIKTOK_ACCESS_TOKEN
+        fromSecret: TIKTOK_ACCESS_TOKEN
+      - key: PORT
+        value: 5000
+
+  - type: static
+    name: esembledata-frontend
+    branch: main
+    path: frontend/build
+    buildCommand: "cd frontend && npm install && npm run build"
+    publishCommand: "serve -s build"
+    plan: free
+    autoDeploy: true
