@@ -1,32 +1,17 @@
-const tiktokService = require('./tiktokService');
+const cron = require("node-cron");
+const tiktokService = require("./tiktokService"); // your TikTok posting logic
 
-const INTERVAL = 60 * 1000; // 1 min (adjust as needed)
+// Schedule for viral times: 11 AM and 6 PM
+const schedule = process.env.CRON_TIME || "0 11,18 * * *";
 
-function start() {
-  console.log('Scheduler started...');
+console.log(`Scheduler started. Posting at: ${schedule}`);
 
-  setInterval(async () => {
-    try {
-      // Get videos from DB or JSON file
-      let videos = [
-        // Example structure:
-        // { title: "Test Video", filePath: "./videos/video1.mp4" }
-      ];
-
-      console.log(`Found ${videos.length} videos to post...`);
-
-      for (const video of videos) {
-        try {
-          await tiktokService.uploadVideo(video);
-          console.log(`Video posted: ${video.title}`);
-        } catch (err) {
-          console.error(`Failed posting ${video.title}: ${err.message}`);
-        }
-      }
-    } catch (err) {
-      console.error('Scheduler error:', err.message);
-    }
-  }, INTERVAL);
-}
-
-module.exports = { start };
+cron.schedule(schedule, async () => {
+  try {
+    console.log("Running TikTok auto-post...");
+    await tiktokService.postNextVideo(); // Implement this in tiktokService.js
+    console.log("TikTok video posted successfully!");
+  } catch (err) {
+    console.error("Error posting TikTok video:", err);
+  }
+});
