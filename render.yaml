@@ -1,25 +1,35 @@
-# render.yaml for esembledata fullstack TikTok dashboard
+# render.yaml - Fullstack TikTok Dashboard
+
 services:
+  # Backend Service - Handles TikTok API, scheduling, and database
   - type: web
     name: esembledata-backend
     env: node
     branch: main
-    path: backend
     buildCommand: "npm install"
-    startCommand: "node server.js"
-    plan: free
-    autoDeploy: true
+    startCommand: "pm2 start ecosystem.config.js --no-daemon"
     envVars:
       - key: TIKTOK_ACCESS_TOKEN
-        fromSecret: TIKTOK_ACCESS_TOKEN
+        value: YOUR_TIKTOK_ACCESS_TOKEN
+      - key: NODE_ENV
+        value: production
       - key: PORT
         value: 5000
+      - key: MAX_CONCURRENT_POSTS
+        value: "3"  # Limit concurrent posts to avoid TikTok throttling
+      - key: CRON_TIME
+        value: "0 11,18 * * *" # Schedule posts at 11 AM & 6 PM daily
+    instanceType: starter
+    autoDeploy: true
+    plan: starter
 
+  # Frontend Service - React Dashboard
   - type: static
     name: esembledata-frontend
     branch: main
-    path: frontend/build
     buildCommand: "cd frontend && npm install && npm run build"
-    publishCommand: "serve -s build"
-    plan: free
+    publishDirectory: "frontend/build"
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: "https://esembledata-backend.onrender.com" # Replace with your Render backend URL
     autoDeploy: true
