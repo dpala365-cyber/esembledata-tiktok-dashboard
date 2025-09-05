@@ -19,9 +19,13 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; else echo "No requirements.txt found, skipping"; fi
+  run: |
+    python -m pip install --upgrade pip
+    if [ -f $GITHUB_WORKSPACE/requirements.txt ]; then
+      pip install -r $GITHUB_WORKSPACE/requirements.txt
+    else
+      echo "No requirements.txt found, skipping installation"
+    fi
 
       - name: Run TikTok Scheduler Script
         run: |
