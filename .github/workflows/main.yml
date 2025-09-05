@@ -1,32 +1,31 @@
-name: TikTok Automation Scheduler
+name: TikTok Scheduler
 
-# Run every 5 minutes
 on:
   schedule:
-    - cron: "*/5 * * * *"
-  workflow_dispatch:  # allows manual trigger
+    - cron: "*/5 * * * *"  # every 5 minutes
+  workflow_dispatch:
 
 jobs:
-  run-tiktok-scheduler:
+  run-tiktok:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: 3.11
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run TikTok Scheduler
+      - name: Run TikTok scheduler
         env:
-          DIGISTORE24_API_KEY: ${{ secrets.DIGISTORE24_API_KEY }}
-          DIGISTORE24_SECRET: ${{ secrets.DIGISTORE24_SECRET }}
+          TIKTOK_API_TOKEN: ggmm9eolNAOM38Zr   # your free trial token
         run: |
+          python your_tiktok_script.py
+
           python tiktok_post_scheduler.py
