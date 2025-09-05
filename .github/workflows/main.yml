@@ -1,5 +1,6 @@
 name: TikTok Scheduler
 
+# Trigger every 5 minutes and allow manual run
 on:
   schedule:
     - cron: "*/5 * * * *"  # every 5 minutes
@@ -8,24 +9,28 @@ on:
 jobs:
   run-tiktok:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      # Step 1: Checkout the repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      # Step 2: Set up Python
+      - name: Setup Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
 
+      # Step 3: Install dependencies safely
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run TikTok scheduler
+      # Step 4: Run your TikTok scheduler script
+      - name: Run TikTok Scheduler
         env:
-          TIKTOK_API_TOKEN: ggmm9eolNAOM38Zr   # your free trial token
+          TIKTOK_API_TOKEN: ggmm9eolNAOM38Zr  # your free trial token
         run: |
           python your_tiktok_script.py
 
-          python tiktok_post_scheduler.py
