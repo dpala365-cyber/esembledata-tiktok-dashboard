@@ -29,5 +29,5 @@ jobs:
     TIKTOK_API_TOKEN: ${{ secrets.TIKTOK_API_TOKEN }}
   run: |
     echo "TikTok token is set"
-    python scheduler.py
+    python main.py
 
