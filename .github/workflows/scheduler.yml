@@ -1,0 +1,30 @@
+name: TikTok Scheduler
+
+# Trigger manually via workflow_dispatch
+on:
+  workflow_dispatch:
+
+jobs:
+  run-scheduler:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run TikTok Scheduler
+        env:
+          TIKTOK_API_TOKEN: ${{ secrets.TIKTOK_API_TOKEN }}
+        run: |
+          echo "TikTok token is set"
+          python scheduler.py  # <-- replace with your actual script name
